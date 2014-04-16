@@ -1,0 +1,19 @@
+{
+    "name": "graywings/evernote_case",
+    "description": "evernote examples",
+    "authors": [
+        {
+            "name": "gray wings",
+            "email": "tgjtgj998@163.com"
+        }
+    ],
+    "require": {
+        "epals/epalsapi": "dev-NeuEDU_DEV"
+    },
+    "repositories": [
+        {
+                "type": "git",
+                "url": "https://github.com/epals/epalsapi"
+        }
+    ]
+}
