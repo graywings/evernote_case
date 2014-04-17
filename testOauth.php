@@ -25,15 +25,17 @@
      * Access Token and Secret     token credentials
      */
 
-    require_once '../evernoteApi/evernoteApi.php';
+    require_once __DIR__."/vendor/autoload.php";
+    require_once __DIR__.'/config.php';
+    require_once 'functions.php';
 
     use EDAM\Types\Data, EDAM\Types\Note, EDAM\Types\Notebook, EDAM\Types\Resource, EDAM\Types\ResourceAttributes,
       EDAM\NoteStore;
     use EDAM\Error\EDAMUserException, EDAM\Error\EDAMErrorCode;
     use Evernote\Client;
-    
-    $everInterfaceBasePath = dirname(__DIR__);
-    require_once $everInterfaceBasePath.'/../php/UserAttribute.php';
+   
+    //$everInterfaceBasePath = dirname(__DIR__);
+    //require_once $everInterfaceBasePath.'/evercase/vendor/epals/epalsapi/src/ePals/UserAttribute.php';
 
     // Use a session to keep track of temporary credentials, etc
     session_start();
@@ -41,7 +43,10 @@
     // Status variables
     $lastError = null;
     $currentStatus = null;
-
+    if($_GET['username'])
+    {
+    $_SESSION['test_user'] = $_GET['username'];
+    }
     // Request dispatching. If a function fails, $lastError will be updated.
     if (isset($_GET['action'])) {
         $action = $_GET['action'];
@@ -56,13 +61,13 @@
         } elseif ($action == 'reset') {
             resetSession();
         } elseif ($action == 'test') {
-            evernotepage();
+            evernotepage($_GET['username']);
         } elseif ($action == 'deleteRevoke'){
-            delete_revoke();
+            delete_revoke($_GET['username']);
         }
     }
 ?>
-
+<script type="text/javascript" src="jquery-1.11.0.min.js"></script>
 <html>
     <head>
         <title>Evernote PHP OAuth Demo</title>
@@ -87,10 +92,13 @@
         
         <ul>
             <li>
-                UserAttribute of User: test@epals.com
+                UserAttribute of User:
+                <input type="text" id="username" value="<?php echo $_SESSION['test_user']?>">
+                @epals.com
+                <input type="button" onclick="oauth()" value="authorize">
             </li>
             <li>
-                <?php showUserAttr(); ?>
+                
             </li>
         </ul>
 
@@ -135,7 +143,7 @@
         </p>
         
         <p>
-            <a href="testOauth.php?action=deleteRevoke">Click here</a> to delete token in UserAttribule and re_authorize 
+            <a href="#" onclick="deletet()">Click here</a> to delete token in UserAttribule and re_authorize 
         </p>
 
         <hr/>
@@ -198,3 +206,17 @@
 
     </body>
 </html>
+
+<script>
+    function oauth()
+    {
+        var username = $("#username").val();
+        window.location.href="?action=test&username="+username; 
+    }
+    
+    function deletet()
+    {
+        var username = $("#username").val();
+        window.location.href="?action=deleteRevoke&username="+username; 
+    }
+</script>
